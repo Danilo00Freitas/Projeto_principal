@@ -21,19 +21,20 @@ public class SecurityConfig {
         private CustomUserDetailsService userDetailsService;
         @Autowired
         SecurityFilter securityFilter;
-        @Bean
-        public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-            http
-                    .csrf(csrf -> csrf.disable())
-                    .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                    .authorizeHttpRequests(authorize -> authorize
-                            .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
-                            .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
-                            .anyRequest().authenticated()
-                    )
-                    .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class);
-            return http.build();
-        }
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .csrf().disable()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .authorizeRequests(authorize -> authorize
+                        .antMatchers(HttpMethod.POST, "/auth/login").permitAll()
+                        .antMatchers(HttpMethod.POST, "/auth/register").permitAll()
+                        .anyRequest().authenticated()
+                )
+                .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class);
+        return http.build();
+    }
         /*Utilizado para não salvar a senha direto no banco... vai codificar ela com salt etc...*/
         @Bean
         public PasswordEncoder passwordEncoder() {
