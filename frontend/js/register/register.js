@@ -56,46 +56,54 @@ cepInput.addEventListener('input', async function () {
 
 // FUNÇÕES RELACIONADAS A VALIDAÇÃO DAS INFORMAÇÕES NO MOMENTO QUE CLICAMOS EM CADASTRAR
 
-const submitBtn = document.getElementById('submitBtn');
+document.addEventListener('DOMContentLoaded', () => {
+    const submitBtn = document.getElementById('submitBtn');
 
-submitBtn.addEventListener('click', async function () {
+    submitBtn.addEventListener('click', async function (event) {
+        event.preventDefault(); // Previne o comportamento padrão do botão de submit
 
-    const name = document.getElementById('name').value;
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
-    const phone = document.getElementById('phone').value;
-    const zip = document.getElementById('zip').value;
-    const addressNumber = document.getElementById('addressNumber').value;
-    const ufField = document.getElementById('state').value.toUpperCase();
+        const name = document.getElementById('name').value;
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        const phone = document.getElementById('phone').value;
+        const zip = document.getElementById('zip').value;
+        const address = document.getElementById('address').value;
+        const addressNumber = document.getElementById('addressNumber').value;
+        const neighbourhood = document.getElementById('neighbourhood').value;
+        const city = document.getElementById('city').value;
+        const state = document.getElementById('state').value.toUpperCase();
 
-    const errorList = validateFields(email, password, zip, phone, addressNumber, ufField);
-    if (errorList.length === 0) {
-        const requestBody = {
-            name,
-            email,
-            password
-        };
+        const errorList = validateFields(name, email, password, phone, zip, address, addressNumber, neighbourhood, city, state);
 
-        try {
-            const response = await fetch('http://localhost:8080/auth/register', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(requestBody),
-                credentials: 'include'
-            });
+        if (errorList.length === 0) {
+            const requestBody = {
+                name,
+                email,
+                password
+            };
 
-            if (response.ok) {
-                alert('Cadastro realizado com sucesso!');
-            } else {
-                throw new Error('Network response was not ok');
+            try {
+                const response = await fetch('http://localhost:8080/auth/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(requestBody),
+                    credentials: 'include'
+                });
+
+                if (response.ok) {
+                    alert('Cadastro realizado com sucesso!');
+                } else {
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || 'Network response was not ok');
+                }
+            } catch (error) {
+                console.error('There was an error while registering', error);
+                alert(`Erro ao realizar cadastro: ${error.message}`);
             }
-        } catch (error) {
-            console.error('There was an error while registering', error);
+        } else {
+            alert(errorList.join('\n'));
         }
-    } else {
-        alert(errorList.join('\n'));
-        errorList.splice(0, errorList.length);
-    }
+    });
 });
