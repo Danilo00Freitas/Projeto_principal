@@ -1,0 +1,2 @@
+ALTER TABLE users
+CHANGE zipCode zip_code VARCHAR(8) NOT NULL;

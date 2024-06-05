@@ -1,0 +1,2 @@
+ALTER TABLE users
+ADD cellphone VARCHAR(11) NOT NULL;

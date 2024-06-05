@@ -12,6 +12,8 @@ public record RegisterRequestData(
         String name,
         @NotBlank @Email
         String email,
+        @NotBlank @Pattern(regexp = "^\\d{11}$")
+        String cellphone,
         @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*\\W).{8,}$")
         String password,
         @NotNull @Valid

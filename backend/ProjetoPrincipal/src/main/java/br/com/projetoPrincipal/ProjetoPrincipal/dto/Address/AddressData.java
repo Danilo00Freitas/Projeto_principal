@@ -7,6 +7,7 @@ public record AddressData(
         String zipCode,
         @NotBlank
         String address,
+
         String addressNumber,
         @NotBlank
         String neighbourhood,
